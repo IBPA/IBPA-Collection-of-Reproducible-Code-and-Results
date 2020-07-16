@@ -108,17 +108,17 @@ def consolidate_businesses(predict, actual, label):
 
 
 def quantile_normalize(df, input_column_names, output_column_names):
-    DasID = df.index
+    ID = df.index
     df = df.reset_index()
-    df = df.drop("DasID", axis=1)      
-    df = df.drop("TOPLINE_TAX", axis=1)    
+    df = df.drop("ID", axis=1)      
+    df = df.drop(<audit yield>, axis=1)    
     df.to_csv("dftobeqnormed.csv", sep=",", index=False)
     
     subprocess.call(['quantile_normalize.R'], shell=True)
     qnorm_data = pd.read_csv('quantile_normalized.csv')
 
-    qnorm_data["DasID"] = DasID
-    qnorm_data = qnorm_data.set_index("DasID")
+    qnorm_data["ID"] = ID
+    qnorm_data = qnorm_data.set_index("ID")
     
     return qnorm_data
 
@@ -131,18 +131,18 @@ def filtration(aud_data, noaud_data, ci, ret_input_column_names, input_column_na
         remove = np.unique(concat_list)
         
     removed_pd = aud_data.iloc[remove.astype(int)]
-    removed_pd = removed_pd.set_index('DasID')
+    removed_pd = removed_pd.set_index('ID')
 
     #drop all businesses related to return entries    
-    DasIDs = aud_data["DasID"][remove.astype(int)].unique()
-    aud_data = aud_data.set_index('DasID')
+    IDs = aud_data["ID"][remove.astype(int)].unique()
+    aud_data = aud_data.set_index('ID')
     
     removed_entries = 0
-    for DasID in DasIDs:
-        removed_entries = removed_entries + len(aud_data.loc[[DasID]])
-        aud_data = aud_data.drop(DasID) 
+    for ID in IDs:
+        removed_entries = removed_entries + len(aud_data.loc[[ID]])
+        aud_data = aud_data.drop(ID) 
 
-    print("Removed {} entries for {} businesses above {}% confidence interval".format(removed_entries, len(DasIDs), int(ci*100)))
+    print("Removed {} entries for {} businesses above {}% confidence interval".format(removed_entries, len(IDs), int(ci*100)))
 
     #remove columns with 0 std 
     remove_columns = aud_data.std()[aud_data.std() == 0].index.values
@@ -209,96 +209,93 @@ def list_features(key, features, names):
         featurelist.append(names[i])
     return featurelist 
 
-def train_test_split_DasID(X, y, test_size, DasID):
-    if (len(DasID) != X.shape[0]):
+def train_test_split_ID(X, y, test_size, ID):
+    if (len(ID) != X.shape[0]):
         raise('!')
         
-    DasID_unique = list(set(DasID))
+    ID_unique = list(set(ID))
     
-    print("{} Unique businesses".format(len(DasID_unique)))
-    random.shuffle(DasID_unique)
-    expected_test_num = len(DasID)*test_size
+    print("{} Unique businesses".format(len(ID_unique)))
+    random.shuffle(ID_unique)
+    expected_test_num = len(ID)*test_size
     
     idx_train = []
     idx_test = []
     
-    for cur_DasID in DasID_unique:       
+    for cur_ID in ID_unique:       
         if len(idx_test) < expected_test_num:
-            idx_test.extend(np.where(DasID == cur_DasID)[0].tolist())
+            idx_test.extend(np.where(ID == cur_ID)[0].tolist())
         else:
-            idx_train.extend(np.where(DasID == cur_DasID)[0].tolist())
+            idx_train.extend(np.where(ID == cur_ID)[0].tolist())
     
     X_train = X.iloc[idx_train].to_numpy()
     X_val = X.iloc[idx_test].to_numpy()
     y_train = y.iloc[idx_train].to_numpy()
     y_val = y.iloc[idx_test].to_numpy()
-    DasID_train = DasID[idx_train]
-    DasID_test = DasID[idx_test]
+    ID_train = ID[idx_train]
+    ID_test = ID[idx_test]
     
-    return X_train, X_val, y_train, y_val, DasID_train, DasID_test
+    return X_train, X_val, y_train, y_val, ID_train, ID_test
 
 def partition(list_in, n):
     random.shuffle(list_in)
     return [list_in[i::n] for i in range(n)]
 
 def preprocessing(pd_data, keep_columns, reg_input_column_names):       
-    aud_data = pd_data[keep_columns].iloc[np.where(pd_data['CASE_ID'] != 0)] #data with audit info
-    noaud_data = pd_data[keep_columns].iloc[np.where(pd_data['CASE_ID'] == 0)] #data without audit info    
+    aud_data = pd_data[keep_columns].iloc[np.where(pd_data<audited entries>)] #data with audit info
+    noaud_data = pd_data[keep_columns].iloc[np.where(pd_data<unaudited entries>)] #data without audit info    
     aud_data = one_hot_encode(aud_data, reg_input_column_names)    
     noaud_data = one_hot_encode(noaud_data, reg_input_column_names)    
     input_column_names = list(set(aud_data.columns) - set(output_column_names))
     
     noaud_input_column_names = list(set(noaud_data.columns) - set(output_column_names))
-    noaud_data = noaud_data.iloc[np.where(noaud_data['fstrNAICS_722'] == 0)]   
-    noaud_data = noaud_data.iloc[np.where(noaud_data['FSTRFILINGFRQ_SUTA'] == 0)]   
-    noaud_data = noaud_data.iloc[np.where(noaud_data['FSTRFILINGFRQ_SUTPNQ'] == 0)]    
     unshared_features = list(set(noaud_input_column_names) - set(input_column_names))
     noaud_data = noaud_data.drop(unshared_features, axis=1)
      
     if predict_method == "regress":
-        aud_data = aud_data.iloc[np.where(aud_data['TOPLINE_TAX'] > 0)] #data with audit info
+        aud_data = aud_data.iloc[np.where(aud_data[<audit yield>] > 0)] #data with audit info
         
-    print("Audit info dataset contains {} entries for {} unique businesses".format(len(aud_data), len(aud_data.groupby("DasID").mean())))
+    print("Audit info dataset contains {} entries for {} unique businesses".format(len(aud_data), len(aud_data.groupby("ID").mean())))
     # aud_data.to_csv("prefilter_audit_data.csv")
     aud_data, noaud_data, input_column_names = filtration(aud_data, noaud_data, 0.95, return_input_column_names, input_column_names)
     # aud_data.to_csv("filtered_audit_data.csv")
     
-    aud_DasID = aud_data.index
-    noaud_DasID = noaud_data.index
+    aud_ID = aud_data.index
+    noaud_ID = noaud_data.index
     
     Y = aud_data[output_column_names].to_numpy()
     
     if predict_method == "classify":
         for i in range(len(Y)):
-            if Y[i] > 20000.0:
+            if Y[i] > <threshold>:
                 Y[i] = int(1)
             else:
                 Y[i] = int(0)
     
     aud_X, noaud_X, aud_Y, Y_scaler = normalization(aud_data, Y, noaud_data, norm_method, predict_method, input_column_names, output_column_names)   
     
-    dataX = pd.DataFrame(data=aud_X, columns=aud_data[input_column_names].columns, index=aud_DasID)
-    noaud_dataX = pd.DataFrame(data=noaud_X, columns=noaud_data[input_column_names].columns, index=noaud_DasID)
-    dataY = pd.DataFrame(data=aud_Y, columns=aud_data[output_column_names].columns, index=aud_DasID)
+    dataX = pd.DataFrame(data=aud_X, columns=aud_data[input_column_names].columns, index=aud_ID)
+    noaud_dataX = pd.DataFrame(data=noaud_X, columns=noaud_data[input_column_names].columns, index=noaud_ID)
+    dataY = pd.DataFrame(data=aud_Y, columns=aud_data[output_column_names].columns, index=aud_ID)
     
-    return dataX, dataY, noaud_dataX, aud_DasID, input_column_names, Y_scaler
+    return dataX, dataY, noaud_dataX, aud_ID, input_column_names, Y_scaler
 
-def cv_DasID(X, y, n_cv, predict_method):
-    DasID = X.index.values
-    DasID_unique = list(set(DasID))
-    random.Random(64).shuffle(DasID_unique)
-    # print(len(DasID_unique))
+def cv_ID(X, y, n_cv, predict_method):
+    ID = X.index.values
+    ID_unique = list(set(ID))
+    random.Random(64).shuffle(ID_unique)
+    # print(len(ID_unique))
 
     if predict_method == "classify":
-        grouped_y = dataY.groupby("DasID").mean()['TOPLINE_TAX']
+        grouped_y = dataY.groupby("ID").mean()[<audit yield>]
 
-        pos_DasIDs = grouped_y.index[grouped_y == 1].to_numpy()
-        neg_DasIDs = grouped_y.index[grouped_y == 0].to_numpy()
+        pos_IDs = grouped_y.index[grouped_y == 1].to_numpy()
+        neg_IDs = grouped_y.index[grouped_y == 0].to_numpy()
         
-        np.random.shuffle(pos_DasIDs)
-        np.random.shuffle(neg_DasIDs)
-        pos_cv = np.array_split(pos_DasIDs, n_cv)
-        neg_cv = np.array_split(neg_DasIDs, n_cv)
+        np.random.shuffle(pos_IDs)
+        np.random.shuffle(neg_IDs)
+        pos_cv = np.array_split(pos_IDs, n_cv)
+        neg_cv = np.array_split(neg_IDs, n_cv)
     
         cv = []
         for i in range(n_cv):
@@ -306,16 +303,16 @@ def cv_DasID(X, y, n_cv, predict_method):
         cv = np.array(cv)
         
     else: #regression
-        cv = np.array_split(DasID_unique, n_cv)
+        cv = np.array_split(ID_unique, n_cv)
                 
-    cv_cluster = np.empty((len(DasID),1))
+    cv_cluster = np.empty((len(ID),1))
     cv_cluster.fill(np.nan)
 
     for fold in range(n_cv):
-        for dasID in cv[fold]:
-            cv_cluster[np.where(X.index == dasID)] = fold
+        for ID in cv[fold]:
+            cv_cluster[np.where(X.index == ID)] = fold
 
-    idx_all = list(range(len(DasID)))
+    idx_all = list(range(len(ID)))
                 
     idx_test_list = []
     idx_train_list = []
@@ -387,7 +384,7 @@ def sampling(X_train, Y_train, method):
         
     else: #regress
         X_df = pd.DataFrame(data=X_train)
-        Y_df = pd.DataFrame(data=Y_train, columns=["TOPLINE_TAX"])
+        Y_df = pd.DataFrame(data=Y_train, columns=[<audit yield>])
         data = pd.concat([X_df, Y_df], axis=1)
         
         print(data.isnull().values.any())
@@ -395,14 +392,14 @@ def sampling(X_train, Y_train, method):
         try:
             SMOGN_result = smogn.smoter(
                 data = data,
-                y = 'TOPLINE_TAX'  
+                y = <audit yield>  
             )
         except:
             SMOGN_result = data
             
         ## plot y distribution 
-        sns.kdeplot(data['TOPLINE_TAX'], label = "Original")
-        sns.kdeplot(SMOGN_result['TOPLINE_TAX'], label = "Modified")
+        sns.kdeplot(data[<audit yield>], label = "Original")
+        sns.kdeplot(SMOGN_result[<audit yield>], label = "Modified")
         plt.show()
         
         print("Before sampling: {} entries".format(len(data)))
@@ -470,16 +467,12 @@ def results(metric_1, metric_2, metric_3, metric_4, metric_5, metric_6, metric_7
         if pipeline_mode == "validation":
             # ROC         
             threshold = pd.DataFrame(list(zip(fpr, tpr)), columns=['FPR', 'TPR'])
-            threshold['diff'] = threshold['TPR'] - threshold['FPR']
-            # print(threshold)
-            
+            threshold['diff'] = threshold['TPR'] - threshold['FPR']            
             optimal_idx = np.argmax(tpr - fpr)
-            # optimal_threshold = thresholds[optimal_idx] 
         
             plt.figure(figsize=(5, 5))   
             plt.plot([0, 1], [0, 1], 'k--')
             plt.scatter(fpr[optimal_idx], tpr[optimal_idx], color = 'red', marker=(5,1), s=150, zorder=2)
-            # plt.savefig("C:/Users/Turing/Desktop/star.jpeg", dpi=3000)
             plt.plot(fpr, tpr, color='b', zorder=1)
             plt.fill_between(fpr, tpr, color='royalblue')
             plt.xlabel('1-Specificity')
@@ -487,7 +480,6 @@ def results(metric_1, metric_2, metric_3, metric_4, metric_5, metric_6, metric_7
             plt.xlim(0,1)
             plt.ylim(0,1)
             plt.title('ROC curve')
-            plt.savefig("C:/Users/Turing/Desktop/ROC.jpeg", dpi=3000)
             plt.show()
             print('AUROCC=%.3f' % (auc_keras))
             
@@ -514,14 +506,13 @@ def results(metric_1, metric_2, metric_3, metric_4, metric_5, metric_6, metric_7
             plt.xlim(0,1)
             plt.ylim(0,1)
             plt.title('Precision-Recall curve')    
-            plt.savefig("C:/Users/Turing/Desktop/PR.jpeg", dpi=3000)        
             plt.show()
             
         cm = confusion_matrix(y_val, y_val_pred.round())
         
         if pipeline_mode == "validation":
-            df_cm = pd.DataFrame(cm, index = ["unsuccessful audit", "successful audit"],
-                              columns = ["unsuccessful audit", "successful audit"])
+            df_cm = pd.DataFrame(cm, index = ["negative audit", "positive audit"],
+                              columns = ["negative audit", "positive audit"])
             plt.figure(figsize = (5,5))
             sns.heatmap(df_cm, annot=True)
             plt.xlabel('Predicted Label')
@@ -595,7 +586,6 @@ def results(metric_1, metric_2, metric_3, metric_4, metric_5, metric_6, metric_7
             plt.ylabel('Residuals')
             plt.ylim(ymin, ymax)
             plt.xlim(xmin, xmax)
-            plt.savefig("C:/Users/Turing/Desktop/resid.jpeg", bbox_inches='tight', dpi=3000)
             plt.show()
             
             ymax = 200000
@@ -631,7 +621,6 @@ def results(metric_1, metric_2, metric_3, metric_4, metric_5, metric_6, metric_7
             plt.ylabel('Predicted Audit Yield ($)')
             plt.ylim(ymin, ymax)
             plt.xlim(xmin, xmax)
-            plt.savefig("C:/Users/Turing/Desktop/pva.jpeg", bbox_inches='tight', dpi=3000)
             plt.show()
             
 def summary_statistics(TP_all, TN_all, FP_all, FN_all, weighted_acc_all):
@@ -755,7 +744,6 @@ def single_regression_model(X_train, y_train, X_test, y_test, params):
     train_actual = y_train
     test_predict = model.predict(X_test) 
     test_actual = y_test 
-    #noaud_test_predict = y_scaler.inverse_transform(model.predict(noaud_dataX))
     
     test_predict = test_predict.reshape(len(test_predict),1)
     train_predict = train_predict.reshape(len(train_predict),1)
@@ -851,7 +839,7 @@ def classify_model(X_train, y_train, X_test, y_test, params):
     # print_weights = LambdaCallback(on_epoch_end=lambda batch, logs: print(model.layers[3].get_weights()))
     
     # Compile model
-    model.compile(optimizer = optimizers.Adam(),#params['lr']), #params['optimizer'],#(lr_normalizer(params['lr'], params['optimizer'])), 
+    model.compile(optimizer = optimizers.Adam(),
                   loss='binary_crossentropy', 
                   metrics=['accuracy'],
                   weighted_metrics=['accuracy'])
@@ -1240,16 +1228,16 @@ def evaluate_validation_regression_model(gs_val, pen_val, INDCORP_val, NAICS_val
 
 def regression_data_partition(gs, pen, INDCORP, NAICS, n_cv, selected, optimization, chosen_params):    
         
-    gsbelow_train, gsbelow_test = cv_DasID(gs.below_X_df, gs.below_y_df, n_cv, "regress")
-    gsabove_train, gsabove_test = cv_DasID(gs.above_X_df, gs.above_y_df, n_cv, "regress")
-    IND_train, IND_test = cv_DasID(INDCORP.group1_X_df, INDCORP.group1_y_df, n_cv, "regress")
-    CORP_train, CORP_test = cv_DasID(INDCORP.group2_X_df, INDCORP.group2_y_df, n_cv, "regress")
-    rest_train, rest_test = cv_DasID(INDCORP.group3_X_df, INDCORP.group3_y_df, n_cv, "regress")
-    penhigh_train, penhigh_test = cv_DasID(pen.above_X_df, pen.above_y_df, n_cv, "regress")
-    penlow_train, penlow_test = cv_DasID(pen.below_X_df, pen.below_y_df, n_cv, "regress")  
-    limserv_train, limserv_test = cv_DasID(NAICS.group1_X_df, NAICS.group1_y_df, n_cv, "regress")  
-    mobile_train, mobile_test = cv_DasID(NAICS.group2_X_df, NAICS.group2_y_df, n_cv, "regress")  
-    otherNAICS_train, otherNAICS_test = cv_DasID(NAICS.group3_X_df, NAICS.group3_y_df, n_cv, "regress")  
+    gsbelow_train, gsbelow_test = cv_ID(gs.below_X_df, gs.below_y_df, n_cv, "regress")
+    gsabove_train, gsabove_test = cv_ID(gs.above_X_df, gs.above_y_df, n_cv, "regress")
+    IND_train, IND_test = cv_ID(INDCORP.group1_X_df, INDCORP.group1_y_df, n_cv, "regress")
+    CORP_train, CORP_test = cv_ID(INDCORP.group2_X_df, INDCORP.group2_y_df, n_cv, "regress")
+    rest_train, rest_test = cv_ID(INDCORP.group3_X_df, INDCORP.group3_y_df, n_cv, "regress")
+    penhigh_train, penhigh_test = cv_ID(pen.above_X_df, pen.above_y_df, n_cv, "regress")
+    penlow_train, penlow_test = cv_ID(pen.below_X_df, pen.below_y_df, n_cv, "regress")  
+    limserv_train, limserv_test = cv_ID(NAICS.group1_X_df, NAICS.group1_y_df, n_cv, "regress")  
+    mobile_train, mobile_test = cv_ID(NAICS.group2_X_df, NAICS.group2_y_df, n_cv, "regress")  
+    otherNAICS_train, otherNAICS_test = cv_ID(NAICS.group3_X_df, NAICS.group3_y_df, n_cv, "regress")  
             
     if optimization == 1:
         
@@ -1382,9 +1370,9 @@ def regression_data_partition(gs, pen, INDCORP, NAICS, n_cv, selected, optimizat
 
     
 
-def optimize(param_1, param_2, param_3, param_4, DasID, oversample, predict_method, n_cv):
-    #classify(X, y, input_column_names, output_column_names, DasID, oversample, predict_method, n_cv)
-    #regress(gs_tree, pen_tree, INDCORP_tree, NAICS_tree, DasID, oversample, predict_method, n_cv)                   
+def optimize(param_1, param_2, param_3, param_4, ID, oversample, predict_method, n_cv):
+    #classify(X, y, input_column_names, output_column_names, ID, oversample, predict_method, n_cv)
+    #regress(gs_tree, pen_tree, INDCORP_tree, NAICS_tree, ID, oversample, predict_method, n_cv)                   
 
     if predict_method == "classify" or predict_method == "regress-single":
         X = param_1
@@ -1392,8 +1380,8 @@ def optimize(param_1, param_2, param_3, param_4, DasID, oversample, predict_meth
         input_column_names = param_3
         output_column_names = param_4
         
-        X_df = pd.DataFrame(data=X, columns=input_column_names, index=DasID)
-        y_df = pd.DataFrame(data=y, columns=output_column_names, index=DasID)
+        X_df = pd.DataFrame(data=X, columns=input_column_names, index=ID)
+        y_df = pd.DataFrame(data=y, columns=output_column_names, index=ID)
         
         test_params = {'activation': ['relu', 'sigmoid'],
                        'first_neuron': [int(X.shape[1]/2)],
@@ -1432,7 +1420,7 @@ def optimize(param_1, param_2, param_3, param_4, DasID, oversample, predict_meth
                            'lr': [0.0001],
                            'input_neurons': [X.shape[1]]}              
         
-        train, test = cv_DasID(X_df, y_df, n_cv, predict_method)       
+        train, test = cv_ID(X_df, y_df, n_cv, predict_method)       
         if predict_method == "classify":
             report, best_model_index, model = cross_validation(X, y, train, test, test_params, optimization, predict_method)
             return report, best_model_index, model
@@ -1457,25 +1445,23 @@ same_nn_for_all_calcs = True
 
 # load dataset
 pd_data = pd.read_csv("Data.csv",sep=",", index_col=0)
-pd_data = pd_data[pd_data[] >= 0]
+pd_data = pd_data[pd_data[<positive audits>]
 
 column_names = pd_data.columns.tolist()
-output_column_names = []
-remove_column_names = []
-return_input_column_names = []
+output_column_names = [<names of the target variable>]
+remove_column_names = [<names of columns to remove manually>]
+return_input_column_names = [<names of return data columns>]
 return_input_column_names = list(set(return_input_column_names) - set(remove_column_names))
 reg_input_column_names = []
 input_column_names = list(set(return_input_column_names).union(set(reg_input_column_names)))
 keep_columns = list(set(output_column_names).union(set(input_column_names)))
 
-gs_mean = np.mean(pd_data[pd_data.CASE_ID != 0].fcurGrossSales)
-pen_mean = np.mean(pd_data[pd_data.CASE_ID != 0].fcurPenalty)
-gs_mean_minmax = (gs_mean - np.min(pd_data[pd_data.CASE_ID != 0].fcurGrossSales))/(np.max(pd_data[pd_data.CASE_ID != 0].fcurGrossSales) - np.min(pd_data[pd_data.CASE_ID != 0].fcurGrossSales))
-pen_mean_minmax = (pen_mean - np.min(pd_data[pd_data.CASE_ID != 0].fcurPenalty))/(np.max(pd_data[pd_data.CASE_ID != 0].fcurPenalty) - np.min(pd_data[pd_data.CASE_ID != 0].fcurPenalty))
+gs_mean = np.mean(pd_data[pd_data.<audited returns>].<gross sales>)
+pen_mean = np.mean(pd_data[pd_data.<audited returns>].<penalty>)
+gs_mean_minmax = (gs_mean - np.min(pd_data[pd_data.<audited returns>].<gross sales>))/(np.max(pd_data[pd_data.<audited returns>].<gross sales>) - np.min(pd_data[pd_data.<audited returns>].<gross sales>))
+pen_mean_minmax = (pen_mean - np.min(pd_data[pd_data.<audited returns>].<penalty>))/(np.max(pd_data[pd_data.<audited returns>].<penalty>) - np.min(pd_data[pd_data.<audited returns>].<penalty>))
 
-dataX, dataY, noaud_dataX, aud_DasID, input_column_names, Y_scaler = preprocessing(pd_data, keep_columns, reg_input_column_names)
-
-
+dataX, dataY, noaud_dataX, aud_ID, input_column_names, Y_scaler = preprocessing(pd_data, keep_columns, reg_input_column_names)
 
 ranked_feats = []
 ranked_feat_accs = []
@@ -1483,15 +1469,15 @@ ranked_feat_f1 = []
 ranked_feat_MSE = []
 ranked_feat_Rsq = []
 
-X_train, X_val, y_train, y_val, DasID_train, DasID_val = train_test_split_DasID(dataX, dataY, test_size=0.10, DasID=aud_DasID)
+X_train, X_val, y_train, y_val, ID_train, ID_val = train_test_split_ID(dataX, dataY, test_size=0.10, ID=aud_ID)
 
 print(X_train.shape)
 print(X_val.shape)
 
-X_train_df = pd.DataFrame(X_train, columns=input_column_names, index=DasID_train)
-y_train_df = pd.DataFrame(y_train, columns=output_column_names, index=DasID_train)
-X_val_df = pd.DataFrame(X_val, columns=input_column_names, index=DasID_val)
-y_val_df = pd.DataFrame(y_val, columns=output_column_names, index=DasID_val)
+X_train_df = pd.DataFrame(X_train, columns=input_column_names, index=ID_train)
+y_train_df = pd.DataFrame(y_train, columns=output_column_names, index=ID_train)
+X_val_df = pd.DataFrame(X_val, columns=input_column_names, index=ID_val)
+y_val_df = pd.DataFrame(y_val, columns=output_column_names, index=ID_val)
 
 if predict_method == "regress":
     class dual_tree:
@@ -1500,13 +1486,13 @@ if predict_method == "regress":
             self.below_X_df = X_df[X_df[threshold] < mean]
             self.below_y = y_df[X_df[threshold] < mean].to_numpy()
             self.below_y_df = y_df[X_df[threshold] < mean]
-            self.DasID_below = X_df[X_df[threshold] < mean].index
+            self.ID_below = X_df[X_df[threshold] < mean].index
 
             self.above_X = X_df[X_df[threshold] > mean].to_numpy()
             self.above_X_df = X_df[X_df[threshold] > mean]
             self.above_y = y_df[X_df[threshold] > mean].to_numpy()
             self.above_y_df = y_df[X_df[threshold] > mean]
-            self.DasID_above = X_df[X_df[threshold] > mean].index
+            self.ID_above = X_df[X_df[threshold] > mean].index
 
     class trio_tree:
         def __init__(self, X_df, y_df, group_1, group_2):    
@@ -1514,48 +1500,48 @@ if predict_method == "regress":
             self.group1_X_df = X_df[X_df[group_1] == 1]
             self.group1_y = y_df[X_df[group_1] == 1].to_numpy()
             self.group1_y_df = y_df[X_df[group_1] == 1]
-            self.DasID_group1 = X_df[X_df[group_1] == 1].index
+            self.ID_group1 = X_df[X_df[group_1] == 1].index
             
             self.group2_X = X_df[X_df[group_2] == 1].to_numpy()
             self.group2_X_df = X_df[X_df[group_2] == 1]
             self.group2_y = y_df[X_df[group_2] == 1].to_numpy()
             self.group2_y_df = y_df[X_df[group_2] == 1]
-            self.DasID_group2 = X_df[X_df[group_2] == 1].index
+            self.ID_group2 = X_df[X_df[group_2] == 1].index
         
             X_df = X_df.reset_index()
             y_df = y_df.reset_index()
-            rest_idx = list(set(X_df.index) - set(np.where(X_df.fstrEntityType_CORP == 1)[0]).union(set(np.where(X_df.fstrEntityType_IND == 1)[0])))
+            rest_idx = list(set(X_df.index) - set(np.where(X_df.<corporations> == 1)[0]).union(set(np.where(X_df.<individual businesses> == 1)[0])))
             X_df = X_df.iloc[rest_idx]
             y_df = y_df.iloc[rest_idx]
-            self.group3_X = X_df.set_index("DasID").to_numpy()
-            self.group3_X_df = X_df.set_index("DasID")
-            self.group3_y = y_df.set_index("DasID").to_numpy()
-            self.group3_y_df = y_df.set_index("DasID")
-            self.DasID_group3 = X_df.set_index("DasID").index
+            self.group3_X = X_df.set_index("ID").to_numpy()
+            self.group3_X_df = X_df.set_index("ID")
+            self.group3_y = y_df.set_index("ID").to_numpy()
+            self.group3_y_df = y_df.set_index("ID")
+            self.ID_group3 = X_df.set_index("ID").index
 
-    gs_tree = dual_tree(X_train_df, y_train_df, "fcurGrossSales", gs_mean_minmax)
-    pen_tree = dual_tree(X_train_df, y_train_df, "fcurPenalty", pen_mean_minmax)
-    INDCORP_tree = trio_tree(X_train_df, y_train_df, "fstrEntityType_IND", "fstrEntityType_CORP")
-    NAICS_tree = trio_tree(X_train_df, y_train_df, "fstrNAICS_722511", "fstrNAICS_722513")
+    gs_tree = dual_tree(X_train_df, y_train_df, "<gross sales>", gs_mean_minmax)
+    pen_tree = dual_tree(X_train_df, y_train_df, "<penalty>", pen_mean_minmax)
+    INDCORP_tree = trio_tree(X_train_df, y_train_df, "<individual businesses>", "<corporations>")
+    NAICS_tree = trio_tree(X_train_df, y_train_df, "<limited-service restaurants>", "<mobile-service restaurants>")
 
-    gs_tree_test = dual_tree(X_train_df, y_train_df, "fcurGrossSales", gs_mean_minmax)
-    pen_tree_test = dual_tree(X_train_df, y_train_df, "fcurPenalty", pen_mean_minmax)
-    INDCORP_tree_test = trio_tree(X_train_df, y_train_df, "fstrEntityType_IND", "fstrEntityType_CORP")
-    NAICS_tree_test = trio_tree(X_train_df, y_train_df, "fstrNAICS_722511", "fstrNAICS_722513")
+    gs_tree_test = dual_tree(X_train_df, y_train_df, "<gross sales>", gs_mean_minmax)
+    pen_tree_test = dual_tree(X_train_df, y_train_df, "<penalty>", pen_mean_minmax)
+    INDCORP_tree_test = trio_tree(X_train_df, y_train_df, "<individual businesses>", "<corporations>")
+    NAICS_tree_test = trio_tree(X_train_df, y_train_df, "<limited-service restaurants>", "<mobile-service restaurants>")
 
-    gs_val_tree = dual_tree(X_val_df, y_val_df, "fcurGrossSales", gs_mean_minmax)
-    pen_val_tree = dual_tree(X_val_df, y_val_df, "fcurPenalty", pen_mean_minmax)
-    INDCORP_val_tree = trio_tree(X_val_df, y_val_df, "fstrEntityType_IND", "fstrEntityType_CORP")
-    NAICS_val_tree = trio_tree(X_val_df, y_val_df, "fstrNAICS_722511", "fstrNAICS_722513")
+    gs_val_tree = dual_tree(X_val_df, y_val_df, "<gross sales>", gs_mean_minmax)
+    pen_val_tree = dual_tree(X_val_df, y_val_df, "<penalty>", pen_mean_minmax)
+    INDCORP_val_tree = trio_tree(X_val_df, y_val_df, "<individual businesses>", "<corporations>")
+    NAICS_val_tree = trio_tree(X_val_df, y_val_df, "<limited-service restaurants>", "<mobile-service restaurants>")
 
 while len(input_column_names) > 0: #remove one feature at a time
         
     if optimization == True:
         print("OPTIMIZING...")
         if predict_method == "classify":
-            report, best_model_index, model = optimize(X_train, y_train, input_column_names, output_column_names, DasID_train, True, predict_method, n_cv)
+            report, best_model_index, model = optimize(X_train, y_train, input_column_names, output_column_names, ID_train, True, predict_method, n_cv)
         elif predict_method == "regress-single":
-            model, y_train_pred, y_train_true, y_test_pred, y_test_true = optimize(X_train, y_train, input_column_names, output_column_names, DasID_train, True, predict_method, n_cv)            
+            model, y_train_pred, y_train_true, y_test_pred, y_test_true = optimize(X_train, y_train, input_column_names, output_column_names, ID_train, True, predict_method, n_cv)            
         else: #regression
             selected, chosen_params, model1, model2, model3 = optimize(gs_tree, pen_tree, INDCORP_tree, NAICS_tree, input_column_names, True, predict_method, n_cv)
 
@@ -1659,38 +1645,38 @@ while len(input_column_names) > 0: #remove one feature at a time
                 gs_tree_test.above_X = np.delete(gs_tree.above_X, feature_index, 1)
                 gs_tree_test.below_X = np.delete(gs_tree.below_X, feature_index, 1)
                 
-                gs_tree_test.above_X_df = pd.DataFrame(gs_tree_test.above_X, index=gs_tree_test.DasID_above, columns=test_input_column_names)                
-                gs_tree_test.below_X_df = pd.DataFrame(gs_tree_test.below_X, index=gs_tree_test.DasID_below, columns=test_input_column_names)
+                gs_tree_test.above_X_df = pd.DataFrame(gs_tree_test.above_X, index=gs_tree_test.ID_above, columns=test_input_column_names)                
+                gs_tree_test.below_X_df = pd.DataFrame(gs_tree_test.below_X, index=gs_tree_test.ID_below, columns=test_input_column_names)
                 
                 pen_tree_test.above_X = np.delete(pen_tree.above_X, feature_index, 1)
                 pen_tree_test.below_X = np.delete(pen_tree.below_X, feature_index, 1)
 
-                pen_tree_test.above_X_df = pd.DataFrame(pen_tree_test.above_X, index=pen_tree_test.DasID_above, columns=test_input_column_names)                
-                pen_tree_test.below_X_df = pd.DataFrame(pen_tree_test.below_X, index=pen_tree_test.DasID_below, columns=test_input_column_names)
+                pen_tree_test.above_X_df = pd.DataFrame(pen_tree_test.above_X, index=pen_tree_test.ID_above, columns=test_input_column_names)                
+                pen_tree_test.below_X_df = pd.DataFrame(pen_tree_test.below_X, index=pen_tree_test.ID_below, columns=test_input_column_names)
 
                 NAICS_tree_test.group1_X = np.delete(NAICS_tree.group1_X, feature_index, 1)
                 NAICS_tree_test.group2_X = np.delete(NAICS_tree.group2_X, feature_index, 1)
                 NAICS_tree_test.group3_X = np.delete(NAICS_tree.group3_X, feature_index, 1)
 
-                NAICS_tree_test.group1_X_df = pd.DataFrame(NAICS_tree_test.group1_X, index=NAICS_tree_test.DasID_group1, columns=test_input_column_names) 
-                NAICS_tree_test.group2_X_df = pd.DataFrame(NAICS_tree_test.group2_X, index=NAICS_tree_test.DasID_group2, columns=test_input_column_names) 
-                NAICS_tree_test.group3_X_df = pd.DataFrame(NAICS_tree_test.group3_X, index=NAICS_tree_test.DasID_group3, columns=test_input_column_names) 
+                NAICS_tree_test.group1_X_df = pd.DataFrame(NAICS_tree_test.group1_X, index=NAICS_tree_test.ID_group1, columns=test_input_column_names) 
+                NAICS_tree_test.group2_X_df = pd.DataFrame(NAICS_tree_test.group2_X, index=NAICS_tree_test.ID_group2, columns=test_input_column_names) 
+                NAICS_tree_test.group3_X_df = pd.DataFrame(NAICS_tree_test.group3_X, index=NAICS_tree_test.ID_group3, columns=test_input_column_names) 
 
                 INDCORP_tree_test.group1_X = np.delete(INDCORP_tree.group1_X, feature_index, 1)
                 INDCORP_tree_test.group2_X = np.delete(INDCORP_tree.group2_X, feature_index, 1)
                 INDCORP_tree_test.group3_X = np.delete(INDCORP_tree.group3_X, feature_index, 1)
                 
-                INDCORP_tree_test.group1_X_df = pd.DataFrame(INDCORP_tree_test.group1_X, index=INDCORP_tree_test.DasID_group1, columns=test_input_column_names) 
-                INDCORP_tree_test.group2_X_df = pd.DataFrame(INDCORP_tree_test.group2_X, index=INDCORP_tree_test.DasID_group2, columns=test_input_column_names) 
-                INDCORP_tree_test.group3_X_df = pd.DataFrame(INDCORP_tree_test.group3_X, index=INDCORP_tree_test.DasID_group3, columns=test_input_column_names) 
+                INDCORP_tree_test.group1_X_df = pd.DataFrame(INDCORP_tree_test.group1_X, index=INDCORP_tree_test.ID_group1, columns=test_input_column_names) 
+                INDCORP_tree_test.group2_X_df = pd.DataFrame(INDCORP_tree_test.group2_X, index=INDCORP_tree_test.ID_group2, columns=test_input_column_names) 
+                INDCORP_tree_test.group3_X_df = pd.DataFrame(INDCORP_tree_test.group3_X, index=INDCORP_tree_test.ID_group3, columns=test_input_column_names) 
                 
         else: #if last feature, just keep and run
             if predict_method == "classify":
                 X_feature_test = X_train 
                         
         if predict_method == "classify":
-            X_df = pd.DataFrame(data=X_feature_test, columns=test_input_column_names, index=DasID_train)
-            y_df = pd.DataFrame(data=y_train, columns=output_column_names, index=DasID_train)
+            X_df = pd.DataFrame(data=X_feature_test, columns=test_input_column_names, index=ID_train)
+            y_df = pd.DataFrame(data=y_train, columns=output_column_names, index=ID_train)
         
             chosen_params = {'hidden_layers': report.data.iloc[best_model_index]['hidden_layers'],
                               'activation': report.data.iloc[best_model_index]['activation'],
@@ -1705,7 +1691,7 @@ while len(input_column_names) > 0: #remove one feature at a time
                               'activity_l2': report.data.iloc[best_model_index]['activity_l2'],
                               'lr': report.data.iloc[best_model_index]['lr']}
             
-            kf_idx_train_list, kf_idx_test_list = cv_DasID(X_df, y_df, n_cv, predict_method)
+            kf_idx_train_list, kf_idx_test_list = cv_ID(X_df, y_df, n_cv, predict_method)
             train_acc_cv, test_acc_cv, train_f1_cv, test_f1_cv = cross_validation(X_feature_test, y_train, kf_idx_train_list, kf_idx_test_list, chosen_params, False, predict_method)
     
             feat_based_train_acc.append(np.mean(train_acc_cv))
@@ -1834,7 +1820,6 @@ else:
     plt.ylabel('R-squared')
     plt.ylim(0, 0.4)
     ax.yaxis.set_ticks([0, 0.1, 0.2, 0.3, 0.4])
-plt.savefig("C:/Users/Turing/Desktop/test.jpeg", dpi=3000)
 plt.show()
 
 
