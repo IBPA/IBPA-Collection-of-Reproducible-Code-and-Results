@@ -1,0 +1,9 @@
+rules,support,confidence,coverage,lift,count
+"{fcurRemainingTax=[4426,4441)} => {fcurTotalAmountDue=[4426,4441)}",0.018691589,1,0.018691589,53.5,2
+"{fcurTotalSales=[2.1744e+05,2.1857e+05)} => {fcurGrossSales=[2.174e+05,2.186e+05)}",0.018691589,1,0.018691589,53.5,2
+"{fcurGrossSales=[4.925e+05,6.384e+05]} => {fcurTotalSales=[4.9249e+05,6.4548e+05]}",0.018691589,1,0.018691589,53.5,2
+"{fcurTotalAmountDue=[3559,3648)} => {fcurRemainingTax=[3559,3648)}",0.018691589,1,0.018691589,53.5,2
+"{fcurDistrictTax=[788.2,1065)} => {fcurTaxDue=[5508.8,8439.9)}",0.018691589,1,0.018691589,53.5,2
+"{fcurGrossSales=[1.025e+05,1.034e+05)} => {fcurTotalSales=[1.0253e+05,1.034e+05)}",0.018691589,1,0.018691589,53.5,2
+"{fcurRemainingTax=[4905,4913)} => {fcurTotalAmountDue=[4905,4913)}",0.018691589,1,0.018691589,53.5,2
+"{fcurPrepayment2=[0,30)} => {fcurPrepayment1=[0,30)}",0.028037383,1,0.028037383,35.66666667,3
