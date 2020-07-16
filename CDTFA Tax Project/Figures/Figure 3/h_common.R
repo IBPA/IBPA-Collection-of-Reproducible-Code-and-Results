@@ -2,24 +2,24 @@
 get_aggregated_per_period <- function(df) {
   
   # Aggregate
-  df_aggr <- aggregate(list(df$fcurGrossSales, df$fcurTaxableTransactions, df$fcurPenalty), 
-                      by = list(df$DasID, df$AUDIT_START_DATE, df$AUDIT_END_DATE, df$AUDIT_PERIOD,
-                                df$TOPLINE_TAX, df$fstrEntityType, df$fstrNAICS, df$DasCityID), 
+  df_aggr <- aggregate(list(df$<gross sales>, df$<taxable transactions>, df$<late penalty>), 
+                      by = list(df$<ID>, df$<audit start date>, df$<audit end date>, df$<audit period>,
+                                df$<audit yield>, df$<business type>, df$<NAICS Code>, df$<City ID>), 
                       sum)
   
   # Name columns
-  colnames(df_aggr) <- c("DasID", "AUDIT_START_DATE", "AUDIT_END_DATE", "AUDIT_PERIOD", 
-                         "TOPLINE_TAX", "fstrEntityType", "fstrNAICS", "DasCityID",
-                         "fcurGrossSales", "fcurTaxableTransactions", "fcurPenalty")
+  colnames(df_aggr) <- c("ID", "audit start date", "audit end date", "audit period", 
+                         "audit yield", "business type", "NAICS codes", "City ID",
+                         "gross sales", "taxable transactions", "late penalty")
   
   # Normalize
-  df_aggr[,c("fcurGrossSales", "fcurTaxableTransactions", "fcurPenalty")] = df_aggr[,c("fcurGrossSales", "fcurTaxableTransactions", "fcurPenalty")]/df_aggr$AUDIT_PERIOD
+  df_aggr[,c("gross sales", "taxable transactions", "late penalty")] = df_aggr[,c("gross sales", "taxable transactions", "late penalty")]/df_aggr$<audit period>
 
   return(df_aggr)
 }
 
 get_bins <- function(df){
-  return(sprintf("%s_%s",df$fstrNAICS, df$DasCityID))
+  return(sprintf("%s_%s",df$<NAICS code>, df$<City ID>))
 }
 
 get_thresholds <- function(){

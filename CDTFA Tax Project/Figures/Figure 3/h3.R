@@ -13,14 +13,11 @@ df <- get_aggregated_per_period(df)
 df$bin_name <- get_bins(df)
 
 ##################################
-# 4.) Test hypothesis.3 df_G1$TOPLINE_TAX > df_G2$TOPLINE_TAX
-#      G1: xRatio < bin_mean_xRatio * p
-#      G2: xRatio >= bin_mean_xRatio * p
-#      where xRatio = fcurTaxableTransactions/fcurGrossSales
+# 4.) Test hypothesis.3 
 print("*************** Hypothesis 3 ***************")
 
 # 4.1) Calculate xRatio 
-df$xRatio <- df$fcurTaxableTransactions/df$fcurGrossSales
+df$xRatio <- df$<taxable transactions>/df$<gross sales>
 
 # 4.2) Find the bin_mean per bin
 df_bin_means <- aggregate(df[,c("xRatio")], list(df$bin_name), mean)
@@ -39,11 +36,11 @@ for(p in p_tresholds) {
   df_G2 <- df[df$xRatio >= df$bin_mean_xRatio * p,]
   
   if(p == 1.00){
-    Group_Low = df_G1$TOPLINE_TAX
-    Group_High = df_G2$TOPLINE_TAX
+    Group_Low = df_G1$<audit yield>
+    Group_High = df_G2$<audit yield>
   }
   
-  test_res <- wilcox.test(df_G1$TOPLINE_TAX, df_G2$TOPLINE_TAX, alternative = "greater", paired = FALSE)
+  test_res <- wilcox.test(df_G1$<audit yield>, df_G2$<audit yield>, alternative = "greater", paired = FALSE)
   message(sprintf("p: %.2f, nLess: %i, nMore: %i, p-value = %0.3g, adj p-value = %0.3g", 
                   p, nrow(df_G1), nrow(df_G2), test_res$p.value, p.adjust(test_res$p.value, method = "fdr", n = length(p_tresholds))))
 }
@@ -110,7 +107,7 @@ p_tresholds <- get_thresholds()
 for(p in p_tresholds) {
   df_G1 <- df[df$xRatio < df$bin_mean_xRatio * p,]
   df_G2 <- df[df$xRatio >= df$bin_mean_xRatio * p,]
-  test_res <- wilcox.test(df_G1$TOPLINE_TAX, df_G2$TOPLINE_TAX, alternative = "less", paired = FALSE)
+  test_res <- wilcox.test(df_G1$<audit yield>, df_G2$<audit yield>, alternative = "less", paired = FALSE)
   message(sprintf("p: %.2f, nLess: %i, nMore: %i, inv p-value = %0.3g, inv adj p-value = %0.3g", 
                   p, nrow(df_G1), nrow(df_G2), test_res$p.value, p.adjust(test_res$p.value, method = "fdr", n = length(p_tresholds))))
 }

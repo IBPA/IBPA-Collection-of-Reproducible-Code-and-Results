@@ -5,19 +5,20 @@ library(oce)
 library(tidyverse)
 library(plyr)
 
-Return_Audit = Return_Audit[Return_Audit$CASE_ID != 0,]
-Return_Audit = Return_Audit[Return_Audit$TOPLINE_TAX >= 0,]
-filtered <- read.csv(file = 'Tax Project/filtered_audit_data_classify.csv')
+Return_Audit = Return_Audit[<audited data>]
+Return_Audit = Return_Audit[<positive audit data>]
+filtered <- read.csv(file = 'data.csv')
 
-numerical_features = which(gsub("fcur","",colnames(Return_Audit)) != colnames(Return_Audit))
-categorical_features = which(gsub("fstr","",colnames(Return_Audit)) != colnames(Return_Audit))
-city_features = which(gsub("City","",colnames(Return_Audit)) != colnames(Return_Audit))
-zip_features = which(gsub("Zip","",colnames(Return_Audit)) != colnames(Return_Audit))
+numerical_features = <numerical features>
+categorical_features = <categorical features>
+city_features = <city features>
+zip_features = <zip code features>
 #categorical_features = c(categorical_features,city_features,zip_features)
 data_categorical_part = NULL
+
 for (i in 1 : length(categorical_features)){
-  if (colnames(Return_Audit)[categorical_features[i]] == "fstrSiteId")next
-  if (colnames(Return_Audit)[categorical_features[i]] == "fstrFormType") next
+  if (colnames(Return_Audit)[categorical_features[i]] == "Locaiton ID")next
+  if (colnames(Return_Audit)[categorical_features[i]] == "Form Type") next
   types = unique(Return_Audit[,categorical_features[i]])
   if (length(types) > 1){
     tmp_matrix = matrix(0,nrow=nrow(Return_Audit),ncol=length(types))
@@ -30,21 +31,18 @@ for (i in 1 : length(categorical_features)){
 }
 
 data_numerical_part = Return_Audit[,numerical_features]
-DasID = Return_Audit$DasID
-yield = Return_Audit$TOPLINE_TAX
-data = cbind(DasID, data_numerical_part)
-data_yield = cbind(DasID, data_numerical_part, yield)
+ID = Return_Audit$ID
+yield = Return_Audit$audit_yield
+data = cbind(ID, data_numerical_part)
+data_yield = cbind(ID, data_numerical_part, yield)
 
 myfunc <- function(vec){
   sum(vec)/length(vec)
 }
-data = aggregate(.~DasID, data, FUN=function(vec) myfunc(vec))
-data_yield = aggregate(.~DasID, data_yield, FUN=function(vec) myfunc(vec))
+data = aggregate(.~ID, data, FUN=function(vec) myfunc(vec))
+data_yield = aggregate(.~ID, data_yield, FUN=function(vec) myfunc(vec))
   
-drop <- c("fcurTotalFullDeductions", 
-          "fcurTaxableTransactions", 
-          "fcurTotalPrepayments",
-          "DasID")
+drop <- c(<list of features to be dropped>)
 data = data[ ,!(names(data) %in% drop)]
 data_yield = data_yield[ ,!(names(data_yield) %in% drop)]
 
@@ -54,27 +52,7 @@ data_yield = data_yield[-remove,]
 
 #write.csv(data, "pca.csv")
 
-drop_zero <- c(
-               'fcurFixtureAndEquipSales',
-               'fcurInterForeignSales',
-               'fcurGovernmentSales',
-               'fcurNonTaxableLabor',
-               'fcurExcessTax',
-               'fcurOtherDeductions',
-               'fcurOtherRetResales',
-               'fcurUseTaxPurchases',
-               'fcurPenalty',
-               'fcurInterest',
-               'fcurNonTaxFoodProd',
-               'fcurSalesTaxIncGrossSales')
-#               'fcurPrepayment2',
-#               'fcurPrepayment1')
-#               'fcurRemainingTax')
-#               'fcurTotalAmountDue',
-#               'fcurDistrictTax',
-#               'fcurTaxDue',
-#               'fcurGrossSales',
-#               'fcurTotalSales')
+drop_zero <- c(<features with too many 0s>)
 
 data = data[ ,!(names(data) %in% drop_zero)]
 data_yield = data_yield[ ,!(names(data_yield) %in% drop_zero)]
@@ -83,8 +61,6 @@ data_norm = apply(data,2,function(x){(x-min(x))/(max(x)-min(x))})
 #data_norm = apply(data,2,function(x){(x-mean(x))/(sd(x))})
 library(preprocessCore)
 #data_norm = normalize.quantiles(as.matrix((data)))
-
-
 
 pca_res = prcomp(data_norm,center = F,scale. = F)
 pca = as.data.frame(pca_res$x)

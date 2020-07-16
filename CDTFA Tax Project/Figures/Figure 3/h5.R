@@ -12,31 +12,29 @@ df <- get_aggregated_per_period(df)
 df$bin_name <- get_bins(df)
 
 # ##################################
-# 4) Test hypothesis.5: df_G1$TOPLINE_TAX > df_G2$TOPLINE_TAX
-#      G1: fcurPenalty > bin_mean_fcurPenalty * p
-#      G2: fcurPenalty <= bin_mean_fcurPenalty * p
+# 4) Test hypothesis.5:
 print("*************** Hypothesis 5 ***************")
 
 # 4.1) Find the bin_mean per bin
-df_bin_means <- aggregate(df[,c("fcurPenalty")], list(df$bin_name), mean)
-colnames(df_bin_means) <- c("bin_name", "bin_mean_fcurPenalty")
+df_bin_means <- aggregate(df[,c("<late penalty>")], list(df$bin_name), mean)
+colnames(df_bin_means) <- c("bin_name", "bin_mean_late_penalty>")
 
 # 4.2) Assign the bin_means relevant for each record
-df$bin_mean_fcurPenalty <- mapply(function(bin_name) {
-  df_bin_means[df_bin_means$bin_name == bin_name, c("bin_mean_fcurPenalty")]
+df$bin_mean_<late penalty> <- mapply(function(bin_name) {
+  df_bin_means[df_bin_means$bin_name == bin_name, c("bin_mean_late_penalty")]
 },
 df[,c("bin_name")])
 
 # 4.3) Evaluate hypothesis for each threshold
 p_tresholds <- get_thresholds()
 for(p in p_tresholds) {
-  df_G1 <- df[df$fcurPenalty > df$bin_mean_fcurPenalty * p,]
-  df_G2 <- df[df$fcurPenalty <= df$bin_mean_fcurPenalty * p,]
+  df_G1 <- df[df$<late penalty> > df$bin_mean_<late penalty> * p,]
+  df_G2 <- df[df$<late penalty> <= df$bin_mean_<late penalty> * p,]
   if(p == 1.00){
-    Group_Low = df_G1$TOPLINE_TAX
-    Group_High = df_G2$TOPLINE_TAX
+    Group_Low = df_G1$<audit yield>
+    Group_High = df_G2$<audit yield>
   }
-  test_res <- wilcox.test(df_G1$TOPLINE_TAX, df_G2$TOPLINE_TAX, alternative = "greater", paired = FALSE)
+  test_res <- wilcox.test(df_G1$<audit yield>, df_G2$<audit yield>, alternative = "greater", paired = FALSE)
   message(sprintf("p: %.2f, nLess: %i, nMore: %i, p-value = %0.3g, adj p-value = %0.3g", 
                   p, nrow(df_G1), nrow(df_G2), test_res$p.value, p.adjust(test_res$p.value, method = "fdr", n = length(p_tresholds))))
 }
@@ -103,9 +101,9 @@ delay = ggplot(Joined, aes(x = Label, y = Value, fill=Label)) +
 # 4.3) Evaluate hypothesis for each threshold
 p_tresholds <- get_thresholds()
 for(p in p_tresholds) {
-  df_G1 <- df[df$fcurPenalty > df$bin_mean_fcurPenalty * p,]
-  df_G2 <- df[df$fcurPenalty <= df$bin_mean_fcurPenalty * p,]
-  test_res <- wilcox.test(df_G1$TOPLINE_TAX, df_G2$TOPLINE_TAX, alternative = "less", paired = FALSE)
+  df_G1 <- df[df$<late penalty> > df$bin_mean_<late penalty> * p,]
+  df_G2 <- df[df$<late penalty> <= df$bin_mean_<late penalty> * p,]
+  test_res <- wilcox.test(df_G1$<audit yield>, df_G2$<audit yield>, alternative = "less", paired = FALSE)
   message(sprintf("p: %.2f, nLess: %i, nMore: %i, inv p-value = %0.3g, inv adj p-value = %0.3g", 
                   p, nrow(df_G1), nrow(df_G2), test_res$p.value, p.adjust(test_res$p.value, method = "fdr", n = length(p_tresholds))))
 }

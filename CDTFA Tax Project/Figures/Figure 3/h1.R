@@ -13,32 +13,29 @@ df <- get_aggregated_per_period(df)
 # 3) Get bins
 df$bin_name <- get_bins(df)
 
-# 4) Test hypothesis.1: df_G1$TOPLINE_TAX > df_G2$TOPLINE_TAX
-#      G1: fcurGrossSales < bin_mean_fcurGrossSales * p
-#      G2: fcurGrossSales >= bin_mean_fcurGrossSales * p
-#      where p is a parameter taking values (0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75)
+# 4) Test hypothesis.1:
 print("*************** Hypothesis 1 ***************")
 
 # 4.1) Find the bin_mean per bin
-df_bin_means <- aggregate(df[,c("fcurGrossSales")], list(df$bin_name), mean)
-colnames(df_bin_means) <- c("bin_name", "bin_mean_fcurGrossSales")
+df_bin_means <- aggregate(df[,c("<gross sales>")], list(df$bin_name), mean)
+colnames(df_bin_means) <- c("bin_name", "bin_mean_of_gross_sales")
 
 # 4.2) Assign the bin_means relevant for each record
-df$bin_mean_fcurGrossSales <- mapply(function(bin_name) {
-  df_bin_means[df_bin_means$bin_name == bin_name, c("bin_mean_fcurGrossSales")]
+df$bin_mean_of_gross_sales <- mapply(function(bin_name) {
+  df_bin_means[df_bin_means$bin_name == bin_name, c("bin_mean_of_gross_sales")]
 },
 df[,c("bin_name")])
 
 # 4.3) Evaluate hypothesis for each threshold
 p_tresholds <- get_thresholds()
 for(p in p_tresholds) {
-  df_G1 <- df[df$fcurGrossSales < df$bin_mean_fcurGrossSales * p,]
-  df_G2 <- df[df$fcurGrossSales >= df$bin_mean_fcurGrossSales * p,]
+  df_G1 <- df[df$<gross sales> < df$bin_mean_of_gross_sales * p,]
+  df_G2 <- df[df$<gross sales> >= df$bin_mean_of_gross_sales * p,]
   if(p == 1.00){
-    Group_Low = df_G1$TOPLINE_TAX
-    Group_High = df_G2$TOPLINE_TAX
+    Group_Low = df_G1$<audit yield>
+    Group_High = df_G2$<audit yield>
   }
-  test_res <- wilcox.test(df_G1$TOPLINE_TAX, df_G2$TOPLINE_TAX, alternative = "greater", paired = FALSE)
+  test_res <- wilcox.test(df_G1$<audit yield>, df_G2$<audit yield>, alternative = "greater", paired = FALSE)
   message(sprintf("p: %.2f, nLess: %i, nMore: %i, p-value = %0.3g, adj p-value = %0.3g",
                   p, 
                   nrow(df_G1), 
@@ -108,9 +105,9 @@ grossSales = ggplot(Joined, aes(x = Label, y = Value, fill=Label)) +
 
 p_tresholds <- get_thresholds()
 for(p in p_tresholds) {
-  df_G1 <- df[df$fcurGrossSales < df$bin_mean_fcurGrossSales * p,]
-  df_G2 <- df[df$fcurGrossSales >= df$bin_mean_fcurGrossSales * p,]
-  test_res <- wilcox.test(df_G1$TOPLINE_TAX, df_G2$TOPLINE_TAX, alternative = "less", paired = FALSE)
+  df_G1 <- df[df$<gross sales> < df$bin_mean_of_gross_sales * p,]
+  df_G2 <- df[df$<gross sales> >= df$bin_mean_of_gross_sales * p,]
+  test_res <- wilcox.test(df_G1$<audit yield>, df_G2$<audit yield>, alternative = "less", paired = FALSE)
   message(sprintf("p: %.2f, nLess: %i, nMore: %i, inv p-value = %0.3g, inv adj p-value = %0.3g",
                   p, 
                   nrow(df_G1), 

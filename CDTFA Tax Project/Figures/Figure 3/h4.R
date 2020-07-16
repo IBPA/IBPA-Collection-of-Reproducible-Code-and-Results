@@ -7,43 +7,39 @@ df <- read.table(src_filepath, sep = ",", header = TRUE)
 
 
 ##################################
-# 3) Test hypothesis.4: df_G1$TOPLINE_TAX > df_G2$TOPLINE_TAX
-#      G1: var_fcurGrossSales > bin_mean_var_fcurGrossSales * p
-#      G2: var_fcurGrossSales <= bin_mean_var_fcurGrossSales * p
-#      where var_fcurGrossSales represents the variance of fcurGrossSales for a given business in a given audio period
-#      where bin_mean_var_fcurGrossSales represents the mean of var_fcurGrossSales in a given bin 
+# 3) Test hypothesis.4: 
 print("*************** Hypothesis 4 ***************")
 
-# 3.1 ) Aggregate per period with variance of fcurGrossSales
-df <- aggregate(df[,c("fcurGrossSales")], 
-                              list(df$DasID, df$AUDIT_START_DATE, df$AUDIT_END_DATE, 
-                                  df$TOPLINE_TAX, df$fstrNAICS, df$DasCityID), var)
-colnames(df) <- c("DasID", "AUDIT_START_DATE", "AUDIT_END_DATE", "TOPLINE_TAX",
-                                "fstrNAICS", "DasCityID", "var_fcurGrossSales")
+# 3.1 ) Aggregate per period with variance of <gross sales>
+df <- aggregate(df[,c("<gross sales>")], 
+                              list(df$<ID>, df$<audit start date>, df$<audit end date>, 
+                                  df$<audit yield>, df$<NAICS Code>, df$<City ID>), var)
+colnames(df) <- c("<ID>", "<audit start date>", "<audit end date>", "<audit yield>",
+                                "<NAICS Code>", "<City ID>", "<gross sales>")
 
 # 3.2) Get bins
 df$bin_name <- get_bins(df)
 
 # 3.3) Find the bin_mean per bin
-df_bin_means <- aggregate(df[,c("var_fcurGrossSales")], list(df$bin_name), mean)
-colnames(df_bin_means) <- c("bin_name", "bin_mean_var_fcurGrossSales")
+df_bin_means <- aggregate(df[,c("<gross sales>")], list(df$bin_name), mean)
+colnames(df_bin_means) <- c("bin_name", "bin_mean_var_gross_sales")
 
 # 3.4) Assign the bin_means relevant for each record
-df$bin_mean_var_fcurGrossSales <- mapply(function(bin_name) {
-  df_bin_means[df_bin_means$bin_name == bin_name, c("bin_mean_var_fcurGrossSales")]
+df$bin_mean_var_gross_sales <- mapply(function(bin_name) {
+  df_bin_means[df_bin_means$bin_name == bin_name, c("bin_mean_var_gross_sales")]
 },
 df[,c("bin_name")])
 
 # 3.5) Evaluate hypothesis for each threshold
 p_tresholds <- get_thresholds()
 for(p in p_tresholds) {
-  df_G1 <- df[df$var_fcurGrossSales < df$bin_mean_var_fcurGrossSales * p,]
-  df_G2 <- df[df$var_fcurGrossSales >= df$bin_mean_var_fcurGrossSales * p,]
+  df_G1 <- df[df$<gross sales> < df$bin_mean_var_gross_sales * p,]
+  df_G2 <- df[df$<gross sales> >= df$bin_mean_var_gross_sales * p,]
   if(p == 1.00){
-    Group_Low = df_G1$TOPLINE_TAX
-    Group_High = df_G2$TOPLINE_TAX
+    Group_Low = df_G1$<audit yield>
+    Group_High = df_G2$<audit yield>
   }
-  test_res <- wilcox.test(df_G1$TOPLINE_TAX, df_G2$TOPLINE_TAX, alternative = "greater", paired = FALSE)
+  test_res <- wilcox.test(df_G1$<audit yield>, df_G2$<audit yield>, alternative = "greater", paired = FALSE)
   message(sprintf("p: %.2f, nLess: %i, nMore: %i, p-value = %0.3g, adj p-value = %0.3g",
                   p, nrow(df_G1), nrow(df_G2), test_res$p.value, p.adjust(test_res$p.value, method = "fdr", n = length(p_tresholds))))
 }
@@ -108,9 +104,9 @@ Ratio = ggplot(Joined, aes(x = Label, y = Value, fill=Label)) +
 
 p_tresholds <- get_thresholds()
 for(p in p_tresholds) {
-  df_G1 <- df[df$var_fcurGrossSales < df$bin_mean_var_fcurGrossSales * p,]
-  df_G2 <- df[df$var_fcurGrossSales >= df$bin_mean_var_fcurGrossSales * p,]
-  test_res <- wilcox.test(df_G1$TOPLINE_TAX, df_G2$TOPLINE_TAX, alternative = "less", paired = FALSE)
+  df_G1 <- df[df$<gross sales> < df$bin_mean_<gross sales> * p,]
+  df_G2 <- df[df$<gross sales> >= df$bin_mean_<gross sales> * p,]
+  test_res <- wilcox.test(df_G1$<audit yield>, df_G2$<audit yield>, alternative = "less", paired = FALSE)
   message(sprintf("p: %.2f, nLess: %i, nMore: %i, inv p-value = %0.3g, inv adj p-value = %0.3g",
                   p, nrow(df_G1), nrow(df_G2), test_res$p.value, p.adjust(test_res$p.value, method = "fdr", n = length(p_tresholds))))
 }

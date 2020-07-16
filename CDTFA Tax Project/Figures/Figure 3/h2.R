@@ -10,16 +10,16 @@ df <- read.table(src_filepath, sep = ",", header = TRUE)
 df <- get_aggregated_per_period(df)
 
 ##################################
-# Test hypothesis.2: TOPLINE_TAX is higher for for fstrEntityType =IND compared to fstrEntityType =CORP
+# Test hypothesis.2: 
 print("*************** Hypothesis 2 ***************")
-df_G1 <- df[df$fstrEntityType == "IND",]
-df_G2 <- df[df$fstrEntityType == "CORP",]
+df_G1 <- df[df$<business type> == "IND",]
+df_G2 <- df[df$<business type> == "CORP",]
 
-Group_Low = df_G1$TOPLINE_TAX
-Group_High = df_G2$TOPLINE_TAX
+Group_Low = df_G1$<audit yield>
+Group_High = df_G2$<audit yield>
 
-test_res <- wilcox.test(df_G1$TOPLINE_TAX, df_G2$TOPLINE_TAX, alternative = "greater", paired = FALSE)
-test_res_inv <- wilcox.test(df_G1$TOPLINE_TAX, df_G2$TOPLINE_TAX, alternative = "less", paired = FALSE)
+test_res <- wilcox.test(df_G1$<audit yield>, df_G2$<audit yield>, alternative = "greater", paired = FALSE)
+test_res_inv <- wilcox.test(df_G1$<audit yield>, df_G2$<audit yield>, alternative = "less", paired = FALSE)
 message(sprintf("Number of IND: %i, Number of CORP: %i, p-value = %0.3g", 
                 nrow(df_G1), nrow(df_G2), test_res$p.value))
 message(sprintf("Number of IND: %i, Number of CORP: %i, inv p-value = %0.3g", 
