@@ -1,6 +1,6 @@
 # Tax Project for the California Department of Tax and Fee Administration
 
-This folder contains the code used to generate predictor (both classifier and regressor) results in Main Manuscript, as well as results obtained in Supplementary Materials. Due to the confidentiality of the data, the results cannot be faithfully reproduced. However, it is our hope that this code can be used by others seeking to fulfill similar goals. 
+This folder contains the code used to generate predictor (both classifier and regressor) results in Main Manuscript, as well as results obtained in [Supplementary Materials](https://github.com/IBPA/IBPA-Collection-of-Reproducible-Code-and-Results/tree/master/2020_Chan_et_al/Supplementary). Due to the confidentiality of the data, the results cannot be faithfully reproduced. However, it is our hope that this code can be used by others seeking to fulfill similar goals. 
 
 ![Figure 1](https://github.com/IBPA/IBPA-Collection-of-Reproducible-Code-and-Results/blob/master/2020_Chan_et_al/Figures/Figure1/Figure1.png)
 *Figure 1. Overview of the audit prediction pipeline.*
