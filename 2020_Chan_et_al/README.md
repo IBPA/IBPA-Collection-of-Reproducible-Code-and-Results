@@ -27,8 +27,6 @@ This folder contains the code used to generate predictor (both classifier and re
 
 * Step3: ```python predictor.py```
 
-Upon completion, ```pred.csv``` will contain the predicted protein identification probabilities.
-
 ### Support
 
 If you have any questions about this project, please contact Trevor Chan (tchchan@ucdavis.edu).
