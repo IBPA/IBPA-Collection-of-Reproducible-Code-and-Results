@@ -2,7 +2,7 @@
 
 This folder contains the code used to generate predictor (both classifier and regressor) results in Main Manuscript, as well as results obtained in Supplementary Materials. Due to the confidentiality of the data, the results cannot be faithfully reproduced. However, it is our hope that this code can be used by others seeking to fulfill similar goals. 
 
-![Figure 1](/Figures/Figure1.png)
+![Figure 1](/Figures/Figure 1.png)
 *Figure 1. Overview of the audit prediction pipeline.*
 
 * <b>predictor.py</b>: contains all code written for classifier and regressor <br />
