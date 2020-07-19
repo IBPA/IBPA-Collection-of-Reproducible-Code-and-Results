@@ -21,7 +21,7 @@ The model contains 67 parameters, and for each SA algorithm, the analyzer record
 | MM       | 1.00E+00 | 9.70E-01 | 9.91E-01 | 9.53E-01 | 9.11E-01 | 9.09E-01  | 8.62E-01 | 1.44E-02  | 1.22E-08 |
 | RBD-FAST | 1.00E+00 | 7.94E-01 | 9.96E-01 | 7.54E-01 | 7.86E-01 | 7.11E-01  | 8.22E-01 | 1.39E-01  | 7.48E-02 |
 
-This table contains the detailed sensitivity measures of the analysis.
+This table contains the detailed sensitivity measures of the analysis. The measurements are min-max normalized in order to plot the spider plot.
 
 ## Authors
 
