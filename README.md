@@ -13,6 +13,7 @@ Each folder under the root directory corresponds to a single paper. For detailed
 ### Under review
 
 * <code>[2020_Chan_et_al](./2020_Chan_et_al)</code>: CDTFA Tax Project. To be updated once reference is available.
+* <code>[2020_Artificial_Meat](./2020_Artificial_Meat)</code>: Animal-cell-based meat model sensitivity analysis. To be updated once reference is available.
 
 ## License
 
