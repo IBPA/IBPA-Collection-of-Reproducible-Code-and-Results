@@ -1,9 +1,0 @@
-1. moved constant class to the file defined the object
-2. newly created two constant class for common use
-3. configurer:init_data added a parameter to indicate whether re-download summary file
-
-4. configurer: changed 'summary' into 'summary.txt' since linux user might struggle opening the file
-
-5. configurer? path_dir, absolute path
-
-6. r_retrieval: splitted download to find and extract

@@ -1,3 +1,0 @@
-,channel_num,first_channel,second_channel,source_type,series_id,platform_id,removed,used_data,paired,stranded,bg_available,used_value,value_valid,pmid,author,date
-SRX610253,NA,NA,NA,SEQUENCING,SRP043363,Illumina HiSeq 2000,FALSE,SEQUENCING,UNPAIRED,UNSTRANDED,NA,NA,TRUE,,,01/01/1900
-SRX610254,NA,NA,NA,SEQUENCING,SRP043363,Illumina HiSeq 2000,FALSE,SEQUENCING,UNPAIRED,UNSTRANDED,NA,NA,TRUE,,,01/01/1900
