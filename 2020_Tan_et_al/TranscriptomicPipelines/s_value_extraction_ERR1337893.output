@@ -1,0 +1,30 @@
+==========================================
+SLURM_JOB_ID = 4814555
+SLURM_NODELIST = c6-28
+CUDA_VISIBLE_DEVICES = 
+==========================================
+['prefetch', 'ERR1337893', '-f', 'all', '-o', './ERR1337893']
+DONE!
+results_s_value_extraction_ERR1337893.dat
+
+===========================================================================
+Job Finished
+
+Name                : s_value_extraction_ERR1337893
+User                : bigghost
+Partition           : high
+Nodes               : c6-28
+Cores               : 1
+State               : COMPLETED
+Submit              : 2019-09-04T00:55:01
+Start               : 2019-09-04T00:55:02
+End                 : 2019-09-04T04:18:17
+Reserved walltime   : 10:00:00
+Used walltime       : 03:23:15
+Used CPU time       : 06:29:42
+% User (Computation): 77.65%
+% System (I/O)      : 22.35%
+Mem reserved        : 2000M/core
+Max Mem used        : 104.98M (c6-28)
+Max Disk Write      : 7.33G (c6-28)
+Max Disk Read       : 6.80G (c6-28)

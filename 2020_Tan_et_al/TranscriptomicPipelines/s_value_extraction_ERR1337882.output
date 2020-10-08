@@ -1,0 +1,30 @@
+==========================================
+SLURM_JOB_ID = 4800739
+SLURM_NODELIST = c6-25
+CUDA_VISIBLE_DEVICES = 
+==========================================
+['prefetch', 'ERR1337882', '-f', 'all', '-o', './ERR1337882']
+DONE!
+results_s_value_extraction_ERR1337882.dat
+
+===========================================================================
+Job Finished
+
+Name                : s_value_extraction_ERR1337882
+User                : bigghost
+Partition           : high
+Nodes               : c6-25
+Cores               : 1
+State               : RUNNING
+Submit              : 2019-08-30T09:23:34
+Start               : 2019-08-30T09:23:35
+End                 : --
+Reserved walltime   : 05:00:00
+Used walltime       : 02:18:54
+Used CPU time       : 04:24:49
+% User (Computation): 78.21%
+% System (I/O)      : 21.80%
+Mem reserved        : 2000M/core
+Max Mem used        : 107.13M (c6-25)
+Max Disk Write      : 6.04G (c6-25)
+Max Disk Read       : 5.13G (c6-25)

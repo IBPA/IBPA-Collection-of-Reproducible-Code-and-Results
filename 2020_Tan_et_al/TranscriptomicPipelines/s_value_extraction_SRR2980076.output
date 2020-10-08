@@ -1,0 +1,30 @@
+==========================================
+SLURM_JOB_ID = 4801143
+SLURM_NODELIST = c8-40
+CUDA_VISIBLE_DEVICES = 
+==========================================
+['prefetch', 'SRR2980076', '-f', 'all', '-o', './SRR2980076']
+DONE!
+results_s_value_extraction_SRR2980076.dat
+
+===========================================================================
+Job Finished
+
+Name                : s_value_extraction_SRR2980076
+User                : bigghost
+Partition           : high
+Nodes               : c8-40
+Cores               : 1
+State               : COMPLETED
+Submit              : 2019-08-31T02:54:48
+Start               : 2019-08-31T02:54:48
+End                 : 2019-08-31T02:59:05
+Reserved walltime   : 05:00:00
+Used walltime       : 00:04:17
+Used CPU time       : 00:05:40
+% User (Computation): 85.21%
+% System (I/O)      : 14.79%
+Mem reserved        : 2000M/core
+Max Mem used        : 112.60M (c8-40)
+Max Disk Write      : 1.26G (c8-40)
+Max Disk Read       : 1.46G (c8-40)

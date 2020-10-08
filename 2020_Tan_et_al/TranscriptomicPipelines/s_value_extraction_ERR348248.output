@@ -1,0 +1,30 @@
+==========================================
+SLURM_JOB_ID = 4818962
+SLURM_NODELIST = c6-23
+CUDA_VISIBLE_DEVICES = 
+==========================================
+['prefetch', 'ERR348248', '-f', 'all', '-o', './ERR348248']
+DONE!
+results_s_value_extraction_ERR348248.dat
+
+===========================================================================
+Job Finished
+
+Name                : s_value_extraction_ERR348248
+User                : bigghost
+Partition           : high
+Nodes               : c6-23
+Cores               : 1
+State               : RUNNING
+Submit              : 2019-09-04T11:22:21
+Start               : 2019-09-04T11:22:21
+End                 : --
+Reserved walltime   : 10:00:00
+Used walltime       : 00:27:39
+Used CPU time       : 00:39:58
+% User (Computation): 82.65%
+% System (I/O)      : 17.35%
+Mem reserved        : 2000M/core
+Max Mem used        : 97.61M (c6-23)
+Max Disk Write      : 4.83G (c6-23)
+Max Disk Read       : 1.95G (c6-23)

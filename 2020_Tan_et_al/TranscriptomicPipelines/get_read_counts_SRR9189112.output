@@ -1,0 +1,31 @@
+==========================================
+SLURM_JOB_ID = 4727004
+SLURM_NODELIST = c6-23
+CUDA_VISIBLE_DEVICES = 
+==========================================
+True
+['bowtie2', '--threads', '4', '--reorder', '--mm', '--end-to-end', '--sensitive', '-x', 'TestTemplate', '-1', './SRR9189112_1.fastq.gz', '-2', './SRR9189112_2.fastq.gz', '-S', './SRR9189112.sam']
+COUNT READS RUN
+BYPASSED!
+
+===========================================================================
+Job Finished
+
+Name                : get_read_counts_SRR9189112
+User                : bigghost
+Partition           : high
+Nodes               : c6-23
+Cores               : 4
+State               : COMPLETED
+Submit              : 2019-08-16T22:15:54
+Start               : 2019-08-16T22:15:54
+End                 : 2019-08-16T22:31:26
+Reserved walltime   : 01:00:00
+Used walltime       : 00:15:32
+Used CPU time       : 00:41:52
+% User (Computation): 99.18%
+% System (I/O)      :  0.82%
+Mem reserved        : 2000M/core
+Max Mem used        : 73.91M (c6-23)
+Max Disk Write      : 1.05G (c6-23)
+Max Disk Read       : 1.52G (c6-23)

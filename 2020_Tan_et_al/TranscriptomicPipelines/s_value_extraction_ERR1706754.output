@@ -1,0 +1,40 @@
+==========================================
+SLURM_JOB_ID = 4832588
+SLURM_NODELIST = c6-31
+CUDA_VISIBLE_DEVICES = 
+==========================================
+['prefetch', 'ERR1706754', '-f', 'all', '-o', './ERR1706754']
+ERR1706754: Exception OccurredFailed to run fastqdump: Try Again
+['prefetch', 'ERR1706754', '-f', 'all', '-o', './ERR1706754']
+ERR1706754: Exception OccurredFailed to run fastqdump: Try Again
+['prefetch', 'ERR1706754', '-f', 'all', '-o', './ERR1706754']
+ERR1706754: Exception OccurredFailed to run fastqdump: Try Again
+['prefetch', 'ERR1706754', '-f', 'all', '-o', './ERR1706754']
+ERR1706754: Exception OccurredFailed to run fastqdump: Try Again
+['prefetch', 'ERR1706754', '-f', 'all', '-o', './ERR1706754']
+ERR1706754: Exception OccurredFailed to run fastqdump: Try Again
+['prefetch', 'ERR1706754', '-f', 'all', '-o', './ERR1706754']
+DONE!
+results_s_value_extraction_ERR1706754.dat
+
+===========================================================================
+Job Finished
+
+Name                : s_value_extraction_ERR1706754
+User                : bigghost
+Partition           : high
+Nodes               : c6-31
+Cores               : 1
+State               : COMPLETED
+Submit              : 2019-09-06T14:48:05
+Start               : 2019-09-06T14:48:05
+End                 : 2019-09-06T15:29:12
+Reserved walltime   : 4-04:00:00
+Used walltime       :   00:41:07
+Used CPU time       :   01:00:52
+% User (Computation): 79.05%
+% System (I/O)      : 20.95%
+Mem reserved        : 2000M/core
+Max Mem used        : 175.07M (c6-31)
+Max Disk Write      : 4.08G (c6-31)
+Max Disk Read       : 2.55G (c6-31)

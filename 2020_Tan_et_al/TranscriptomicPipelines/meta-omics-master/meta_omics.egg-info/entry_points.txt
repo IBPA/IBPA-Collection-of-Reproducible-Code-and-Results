@@ -1,0 +1,3 @@
+[console_scripts]
+meta-omics = omics.bin.run:main
+

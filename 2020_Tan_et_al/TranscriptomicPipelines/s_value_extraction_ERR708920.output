@@ -1,0 +1,33 @@
+==========================================
+SLURM_JOB_ID = 4855124
+SLURM_NODELIST = c8-39
+CUDA_VISIBLE_DEVICES = 
+==========================================
+FAILED DURING RUNNING VDB_VALIDATE
+Command '['vdb-validate', './ERR708920.sra']' returned non-zero exit status 3
+['prefetch', 'ERR708920', '-f', 'all', '-O', './']
+GOOD!
+DONE!
+results_s_value_extraction_ERR708920.dat
+
+===========================================================================
+Job Finished
+
+Name                : s_value_extraction_ERR708920
+User                : bigghost
+Partition           : high
+Nodes               : c8-39
+Cores               : 1
+State               : COMPLETED
+Submit              : 2019-09-23T18:02:27
+Start               : 2019-09-23T18:02:28
+End                 : 2019-09-23T18:57:24
+Reserved walltime   : 10:00:00
+Used walltime       : 00:54:56
+Used CPU time       : 01:30:48
+% User (Computation): 81.57%
+% System (I/O)      : 18.43%
+Mem reserved        : 2000M/core
+Max Mem used        : 175.40M (c8-39)
+Max Disk Write      : 6.74G (c8-39)
+Max Disk Read       : 2.43G (c8-39)

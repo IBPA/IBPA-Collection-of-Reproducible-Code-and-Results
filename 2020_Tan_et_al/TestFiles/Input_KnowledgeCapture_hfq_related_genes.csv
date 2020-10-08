@@ -1,0 +1,10 @@
+gene_list,description,expected
+STM0021,bcfA,down
+STM0543,fimA,down
+sefA,sefA,up
+STM0299,safA,down
+STM1144,csgA,down
+STM1142,csgD,down
+STM0340,stbA,down
+STM4594,sthA,down
+pegA,pegA,down

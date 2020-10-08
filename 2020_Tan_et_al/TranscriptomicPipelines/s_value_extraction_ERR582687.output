@@ -1,0 +1,33 @@
+==========================================
+SLURM_JOB_ID = 4855179
+SLURM_NODELIST = c6-23
+CUDA_VISIBLE_DEVICES = 
+==========================================
+FAILED DURING RUNNING VDB_VALIDATE
+Command '['vdb-validate', './ERR582687.sra']' returned non-zero exit status 3
+['prefetch', 'ERR582687', '-f', 'all', '-O', './']
+GOOD!
+DONE!
+results_s_value_extraction_ERR582687.dat
+
+===========================================================================
+Job Finished
+
+Name                : s_value_extraction_ERR582687
+User                : bigghost
+Partition           : high
+Nodes               : c6-23
+Cores               : 1
+State               : RUNNING
+Submit              : 2019-09-24T00:24:12
+Start               : 2019-09-24T00:24:13
+End                 : --
+Reserved walltime   : 10:00:00
+Used walltime       : 00:14:16
+Used CPU time       : 00:23:50
+% User (Computation): 81.10%
+% System (I/O)      : 18.90%
+Mem reserved        : 2000M/core
+Max Mem used        : 167.35M (c6-23)
+Max Disk Write      : 1.76G (c6-23)
+Max Disk Read       : 639.22M (c6-23)

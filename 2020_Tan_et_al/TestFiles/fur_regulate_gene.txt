@@ -1,0 +1,2 @@
+PMC5001712
+Fur activates flagellar genes [119]. Fur activates SPI1 genes [19]. Fur represses SPI2 genes [120].

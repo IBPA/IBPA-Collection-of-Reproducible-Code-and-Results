@@ -1,0 +1,8 @@
+1. Verify Omics DI outcome
+    (a) How about the synonym handling?
+2. Validate results (Gum Disease/IBS curated by us previously)
+
+
+============
+1. What/How/Why
+2. Bullet points to show the issues

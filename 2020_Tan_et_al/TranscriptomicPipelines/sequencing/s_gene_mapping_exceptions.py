@@ -1,0 +1,2 @@
+class FailedToWriteGeneMappingTable(Exception):
+    pass

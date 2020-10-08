@@ -1,0 +1,30 @@
+==========================================
+SLURM_JOB_ID = 4812330
+SLURM_NODELIST = c7-27
+CUDA_VISIBLE_DEVICES = 
+==========================================
+['prefetch', 'ERR1337891', '-f', 'all', '-o', './ERR1337891']
+DONE!
+results_s_value_extraction_ERR1337891.dat
+
+===========================================================================
+Job Finished
+
+Name                : s_value_extraction_ERR1337891
+User                : bigghost
+Partition           : high
+Nodes               : c7-27
+Cores               : 1
+State               : RUNNING
+Submit              : 2019-09-03T21:32:51
+Start               : 2019-09-03T21:32:52
+End                 : --
+Reserved walltime   : 10:00:00
+Used walltime       : 03:21:30
+Used CPU time       : 06:25:55
+% User (Computation): 78.69%
+% System (I/O)      : 21.31%
+Mem reserved        : 2000M/core
+Max Mem used        : 106.21M (c7-27)
+Max Disk Write      : 7.02G (c7-27)
+Max Disk Read       : 6.62G (c7-27)

@@ -1,0 +1,24 @@
+(20423, 1)
+SRX5027116(Normal)
+
+===========================================================================
+Job Finished
+
+Name                : s_sample_mapping_SRX5027116
+User                : bigghost
+Partition           : high
+Nodes               : c6-25
+Cores               : 1
+State               : RUNNING
+Submit              : 2020-01-05T01:07:14
+Start               : 2020-01-05T01:07:14
+End                 : --
+Reserved walltime   : 10:00:00
+Used walltime       : 00:00:04
+Used CPU time       : 00:00:01
+% User (Computation): 57.01%
+% System (I/O)      : 42.93%
+Mem reserved        : 2000M/core
+Max Mem used        : 0.00  (c6-25)
+Max Disk Write      : 0.00  (c6-25)
+Max Disk Read       : 0.00  (c6-25)

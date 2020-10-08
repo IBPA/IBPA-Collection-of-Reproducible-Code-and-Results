@@ -1,0 +1,33 @@
+==========================================
+SLURM_JOB_ID = 4855205
+SLURM_NODELIST = c6-28
+CUDA_VISIBLE_DEVICES = 
+==========================================
+FAILED DURING RUNNING VDB_VALIDATE
+Command '['vdb-validate', './ERR738210.sra']' returned non-zero exit status 3
+['prefetch', 'ERR738210', '-f', 'all', '-O', './']
+GOOD!
+DONE!
+results_s_value_extraction_ERR738210.dat
+
+===========================================================================
+Job Finished
+
+Name                : s_value_extraction_ERR738210
+User                : bigghost
+Partition           : high
+Nodes               : c6-28
+Cores               : 1
+State               : RUNNING
+Submit              : 2019-09-24T04:14:00
+Start               : 2019-09-24T04:14:00
+End                 : --
+Reserved walltime   : 10:00:00
+Used walltime       : 01:35:02
+Used CPU time       : 02:37:03
+% User (Computation): 81.39%
+% System (I/O)      : 18.62%
+Mem reserved        : 2000M/core
+Max Mem used        : 166.19M (c6-28)
+Max Disk Write      : 12.40G (c6-28)
+Max Disk Read       : 6.08G (c6-28)

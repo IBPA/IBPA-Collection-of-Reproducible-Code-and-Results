@@ -1,0 +1,30 @@
+==========================================
+SLURM_JOB_ID = 4824363
+SLURM_NODELIST = c6-28
+CUDA_VISIBLE_DEVICES = 
+==========================================
+['prefetch', 'ERR968695', '-f', 'all', '-o', './ERR968695']
+DONE!
+results_s_value_extraction_ERR968695.dat
+
+===========================================================================
+Job Finished
+
+Name                : s_value_extraction_ERR968695
+User                : bigghost
+Partition           : high
+Nodes               : c6-28
+Cores               : 1
+State               : COMPLETED
+Submit              : 2019-09-05T00:44:51
+Start               : 2019-09-05T00:44:51
+End                 : 2019-09-05T01:34:46
+Reserved walltime   : 10:00:00
+Used walltime       : 00:49:55
+Used CPU time       : 01:09:59
+% User (Computation): 83.94%
+% System (I/O)      : 16.06%
+Mem reserved        : 2000M/core
+Max Mem used        : 98.93M (c6-28)
+Max Disk Write      : 8.00G (c6-28)
+Max Disk Read       : 3.33G (c6-28)

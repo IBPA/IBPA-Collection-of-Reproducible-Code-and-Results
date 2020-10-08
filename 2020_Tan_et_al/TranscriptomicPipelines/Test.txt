@@ -1,0 +1,8 @@
+2019-07-25T03:52:04 vdb-validate.2.9.6 info: Database 'SRR6155102' metadata: md5 ok
+2019-07-25T03:52:04 vdb-validate.2.9.6 info: Table 'SEQUENCE' metadata: md5 ok
+2019-07-25T03:52:04 vdb-validate.2.9.6 info: Column 'ALTREAD': checksums ok
+2019-07-25T03:52:04 vdb-validate.2.9.6 info: Column 'QUALITY': checksums ok
+2019-07-25T03:52:05 vdb-validate.2.9.6 info: Column 'READ': checksums ok
+2019-07-25T03:52:05 vdb-validate.2.9.6 info: Column 'SPOT_GROUP': checksums ok
+2019-07-25T03:52:05 vdb-validate.2.9.6 info: Database 'SRR6155102' contains only unaligned reads
+2019-07-25T03:52:05 vdb-validate.2.9.6 info: Database 'SRR6155102' is consistent

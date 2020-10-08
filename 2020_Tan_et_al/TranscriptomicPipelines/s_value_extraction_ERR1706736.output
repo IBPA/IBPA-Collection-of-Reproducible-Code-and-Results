@@ -1,0 +1,33 @@
+==========================================
+SLURM_JOB_ID = 4855251
+SLURM_NODELIST = c6-25
+CUDA_VISIBLE_DEVICES = 
+==========================================
+FAILED DURING RUNNING VDB_VALIDATE
+Command '['vdb-validate', './ERR1706736.sra']' returned non-zero exit status 3
+['prefetch', 'ERR1706736', '-f', 'all', '-O', './']
+GOOD!
+DONE!
+results_s_value_extraction_ERR1706736.dat
+
+===========================================================================
+Job Finished
+
+Name                : s_value_extraction_ERR1706736
+User                : bigghost
+Partition           : high
+Nodes               : c6-25
+Cores               : 1
+State               : COMPLETED
+Submit              : 2019-09-24T10:30:01
+Start               : 2019-09-24T10:30:01
+End                 : 2019-09-24T10:30:17
+Reserved walltime   : 10:00:00
+Used walltime       : 00:00:16
+Used CPU time       : 00:00:02
+% User (Computation): 59.88%
+% System (I/O)      : 40.09%
+Mem reserved        : 2000M/core
+Max Mem used        : 0.00  (c6-25)
+Max Disk Write      : 0.00  (c6-25)
+Max Disk Read       : 0.00  (c6-25)

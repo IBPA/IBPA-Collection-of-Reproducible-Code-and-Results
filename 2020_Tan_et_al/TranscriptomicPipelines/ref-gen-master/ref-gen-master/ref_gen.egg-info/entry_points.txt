@@ -1,0 +1,5 @@
+[console_scripts]
+ref-download = refgen.cli.internal:ref_download
+ref-find = refgen.cli.internal:ref_find
+ref-gen = refgen.cli.run:main
+

@@ -1,0 +1,33 @@
+==========================================
+SLURM_JOB_ID = 4855213
+SLURM_NODELIST = c6-25
+CUDA_VISIBLE_DEVICES = 
+==========================================
+FAILED DURING RUNNING VDB_VALIDATE
+Command '['vdb-validate', './ERR405231.sra']' returned non-zero exit status 3
+['prefetch', 'ERR405231', '-f', 'all', '-O', './']
+GOOD!
+DONE!
+results_s_value_extraction_ERR405231.dat
+
+===========================================================================
+Job Finished
+
+Name                : s_value_extraction_ERR405231
+User                : bigghost
+Partition           : high
+Nodes               : c6-25
+Cores               : 1
+State               : RUNNING
+Submit              : 2019-09-24T05:58:38
+Start               : 2019-09-24T05:58:39
+End                 : --
+Reserved walltime   : 10:00:00
+Used walltime       : 01:39:40
+Used CPU time       : 02:41:36
+% User (Computation): 86.87%
+% System (I/O)      : 13.13%
+Mem reserved        : 2000M/core
+Max Mem used        : 536.53M (c6-25)
+Max Disk Write      : 12.89G (c6-25)
+Max Disk Read       : 8.81G (c6-25)

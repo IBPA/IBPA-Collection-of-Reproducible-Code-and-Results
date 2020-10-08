@@ -1,0 +1,28 @@
+==========================================
+SLURM_JOB_ID = 4855431
+SLURM_NODELIST = c6-18
+CUDA_VISIBLE_DEVICES = 
+==========================================
+[434, 435, 436, 437, 438, 439, 440, 432]
+
+===========================================================================
+Job Finished
+
+Name                : RFImputation_434-435-436-437-438-439-440-432
+User                : bigghost
+Partition           : high
+Nodes               : c6-18
+Cores               : 32
+State               : RUNNING
+Submit              : 2019-09-25T12:28:30
+Start               : 2019-09-25T12:28:30
+End                 : --
+Reserved walltime   : 01:00:00
+Used walltime       : 00:00:04
+Used CPU time       : 00:00:03
+% User (Computation): 29.23%
+% System (I/O)      : 70.77%
+Mem reserved        : 2000M/core
+Max Mem used        : 0.00  (c6-18)
+Max Disk Write      : 0.00  (c6-18)
+Max Disk Read       : 0.00  (c6-18)

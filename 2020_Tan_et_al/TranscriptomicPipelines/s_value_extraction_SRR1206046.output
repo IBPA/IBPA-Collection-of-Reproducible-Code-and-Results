@@ -1,0 +1,28 @@
+FAILED DURING RUNNING VDB_VALIDATE
+Command '['vdb-validate', './SRR1206046.sra']' returned non-zero exit status 3
+['prefetch', 'SRR1206046', '-f', 'all', '-O', './']
+GOOD!
+DONE!
+results_s_value_extraction_SRR1206046.dat
+
+===========================================================================
+Job Finished
+
+Name                : s_value_extraction_SRR1206046
+User                : bigghost
+Partition           : high
+Nodes               : c6-23
+Cores               : 4
+State               : COMPLETED
+Submit              : 2019-12-30T15:39:22
+Start               : 2019-12-30T15:39:22
+End                 : 2019-12-30T22:01:49
+Reserved walltime   : 10:00:00
+Used walltime       : 06:22:27
+Used CPU time       : 17:19:41
+% User (Computation): 99.30%
+% System (I/O)      :  0.70%
+Mem reserved        : 2000M/core
+Max Mem used        : 198.76M (c6-23)
+Max Disk Write      : 74.12G (c6-23)
+Max Disk Read       : 36.92G (c6-23)
