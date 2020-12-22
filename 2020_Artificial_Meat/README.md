@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This project aims to provide a comprehensive sensitivity analysis for Animal-cell-based Meat (ACBM) model [1]. This folder only contains analysis results of the analysis. The codes will be released when the manuscript is published. Please send email to fzli@ucdavis.edu if you would like to review the code!
+This repository aims to provide a comprehensive sensitivity analysis for Animal-cell-based Meat (ACBM) model [1]. We use multiple sensitivity analysis methods provided by SALib package [2].
 
-## Methods
+## Results
 
 ![fig](/2020_Artificial_Meat/fig/spiderplot.png)
 
@@ -29,10 +29,14 @@ This table contains the detailed sensitivity measures of the analysis. The measu
 
 ## Ackowledgements
 
-- Derrick Risner, for providing ACBM model and data
-- Ilias Tagkopoulos, for advisory and documentation review
-- SALib, for providing analysis tools https://salib.readthedocs.io/en/latest/
+- Derrick Risner, for the model and data.
+- Dr. Ilias Tagkopoulos, for advisory and documentation review.
+
+## Citation
+
+Risner, Derrick, Fangzhou Li, Jason Fell, Sara Pace, Ilias Tagkopoulos, Justin Siegel, and Edward Spang. Preliminary techno-economic assessment of animal cell-based meat. *Foods* (2021). doi: 10.3390/foods10010003
 
 ## References
 
-- [1] Derrick Risner, et al. "Techno-economic assessment of animal cell-based meat." (2020)
+- [1] Derrick R., et al., (2021), Preliminary techno-economic assessment of animal cell-based meat, Foods, 10(1), 3, doi: 10.3390/foods10010003
+- [2] Herman, J., Usher, W., (2017), SALib: An open-source Python library for sensitivity analysis, Journal of Open Source Software, 2(9), 97, doi:10.21105/joss.00097
